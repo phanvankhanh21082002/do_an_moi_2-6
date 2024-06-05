@@ -9,8 +9,8 @@
         android:id="@+id/tvDatabaseContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Database Content"
-        android:textSize="18sp"
+        android:text="@string/database_show"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <ScrollView
@@ -24,5 +24,6 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="" />
+
     </ScrollView>
 </LinearLayout>

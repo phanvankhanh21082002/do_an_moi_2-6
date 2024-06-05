@@ -1,4 +1,4 @@
-package com.example.do_an;
+package com.example.do_an.ui.apk_scan;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.do_an.R;
 
 public class ShowDatabaseActivity extends AppCompatActivity {
 

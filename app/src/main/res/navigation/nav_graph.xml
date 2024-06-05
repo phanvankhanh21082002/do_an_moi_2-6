@@ -3,26 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/nav_home">
+
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.do_an.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/nav_home"
+        android:name="com.example.do_an.ui.home.HomePage"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
 
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/nav_apk_scan"-->
+<!--        android:name="com.example.do_an.ui.apk_scan.APKShow"-->
+<!--        android:label="@string/menu_apk_scan"-->
+<!--        tools:layout="@layout/fragment_apk_show" />-->
+    <activity
+        android:id="@id/nav_apk_scan"
+        android:name="com.example.do_an.ui.apk_scan.ScanAPK"
+        android:label="@string/apk_scan_label"
+        tools:layout="@layout/fragment_apk_scan"/>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.do_an.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/nav_about_us"
+        android:name="com.example.do_an.ui.about_us.AboutUs"
+        android:label="@string/menu_about_us"
+        tools:layout="@layout/fragment_about_us" />
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
 </navigation>

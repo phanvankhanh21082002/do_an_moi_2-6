@@ -1,4 +1,4 @@
-package com.example.do_an;
+package com.example.do_an.ui.apk_scan;
 import android.content.Context;
 import android.net.Uri;
 import java.io.ByteArrayOutputStream;
