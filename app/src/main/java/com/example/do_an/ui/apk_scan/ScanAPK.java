@@ -213,7 +213,7 @@ public class ScanAPK extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Thread.sleep(3000);  // Check again after 4 seconds
+                        Thread.sleep(4000);  // Check again after 4 seconds
                     }
                 } catch (Exception e) {
                     handler.post(() -> {
