@@ -32,11 +32,15 @@
             android:exported="true"
             android:label="@string/apk_scan_label"
             android:theme="@style/Theme.Do_an.NoActionBar">
-
         </activity>
 
+        <activity
+            android:name=".ui.apk_scan.ShowDatabaseActivity"
+            android:exported="true"
+            android:label="@string/database_label"
+            android:theme="@style/Theme.Do_an.NoActionBar">
+        </activity>
 
-        <activity android:name=".ui.apk_scan.ShowDatabaseActivity" />
     </application>
 
 

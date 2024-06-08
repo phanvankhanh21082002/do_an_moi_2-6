@@ -3,9 +3,12 @@ package com.example.do_an.ui.apk_scan;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.do_an.R;
 
@@ -19,10 +22,26 @@ public class ShowDatabaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_database);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         tvContent = findViewById(R.id.tvContent);
         databaseHelper = new DatabaseHelper(this);
-
         showDatabaseContent();
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle back arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            // Finish the activity and return to ScanAPK
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showDatabaseContent() {

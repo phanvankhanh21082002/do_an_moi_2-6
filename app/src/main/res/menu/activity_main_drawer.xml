@@ -13,6 +13,10 @@
             android:icon="@drawable/scan_apk"
             android:title="@string/menu_apk_scan" />
         <item
+            android:id="@+id/nav_database"
+            android:icon="@drawable/ic_menu_results"
+            android:title="@string/menu_db_show" />
+        <item
             android:id="@+id/nav_about_us"
             android:icon="@drawable/team"
             android:title="@string/menu_about_us" />
