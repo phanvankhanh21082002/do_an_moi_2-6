@@ -155,7 +155,7 @@ public class ScanAPK extends AppCompatActivity {
                         .build();
 
                 Request request = new Request.Builder()
-                        .url("http://34.126.66.46:3000/upload_file")
+                        .url("http://34.143.194.2:3000/upload_file")
                         .post(requestBody)
                         .build();
 

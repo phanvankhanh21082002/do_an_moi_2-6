@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -43,7 +41,6 @@ public class ShowDatabaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
     private void showDatabaseContent() {
         StringBuilder content = new StringBuilder();
         Cursor cursor = databaseHelper.getAllScanResults();
@@ -53,12 +50,14 @@ public class ShowDatabaseActivity extends AppCompatActivity {
                 @SuppressLint("Range") String fileName = cursor.getString(cursor.getColumnIndex("file_name"));
                 @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex("time"));
                 @SuppressLint("Range") String result = cursor.getString(cursor.getColumnIndex("result"));
-                content.append("File Name: ").append(fileName).append("\n");
-                content.append("Time: ").append(time).append("\n");
-                content.append("Result: ").append(result).append("\n\n");
+                String resultText = "File Name: " + fileName + "\n" +
+                        "Time: " + time + "\n" +
+                        "Result: " + result + "\n\n";
+                content.insert(0, resultText); // Prepend the result to the content
             }
             cursor.close();
         }
         tvContent.setText(content.toString());
     }
+
 }

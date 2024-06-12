@@ -23,6 +23,8 @@
     <string name="fileSelectorButton">Click to Select File</string>
     <string name="uploadButton">Click to Scan File</string>
     <string name="downloadButton">Click to View Results</string>
+    <string name="clearButton">Click to Clear Database</string>
+    <string name="deleteButton">Clear Results</string>
 
     <string name="nav_header_title">Android-malware Agency</string>
     <string name="nav_header_subtitle">GSU24IA03</string>
