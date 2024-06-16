@@ -197,7 +197,7 @@ public class ScanAPK extends AppCompatActivity {
             boolean reportReady = false;
             while (!reportReady) {
                 try {
-                    URL url = new URL("http://34.126.66.46/reports/" + fileName + ".txt");
+                    URL url = new URL("http://34.143.194.2/reports/" + fileName + ".txt");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();

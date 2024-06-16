@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -14,6 +17,7 @@ public class ShowDatabaseActivity extends AppCompatActivity {
 
     TextView tvContent;
     DatabaseHelper databaseHelper;
+    Button deleteDatabasebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,10 @@ public class ShowDatabaseActivity extends AppCompatActivity {
 
         tvContent = findViewById(R.id.tvContent);
         databaseHelper = new DatabaseHelper(this);
-        showDatabaseContent();
+        deleteDatabasebutton = findViewById(R.id.deleteDatabase);
 
+        showDatabaseContent();
+        deleteDatabasebutton.setOnClickListener(v -> confirmAndDeleteAllResults());
 
     }
 
@@ -60,4 +66,17 @@ public class ShowDatabaseActivity extends AppCompatActivity {
         tvContent.setText(content.toString());
     }
 
+    private void confirmAndDeleteAllResults() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete all results?")
+                .setPositiveButton("Yes", (dialog, which) -> deleteAllScanResultsAndUpdateUI())
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deleteAllScanResultsAndUpdateUI() {
+        databaseHelper.deleteAllScanResults();
+        tvContent.setText(""); // Clear the content of TextView to reflect that the database is empty
+    }
 }

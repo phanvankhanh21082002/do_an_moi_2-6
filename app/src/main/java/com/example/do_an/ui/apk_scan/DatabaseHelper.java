@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_RESULT + " TEXT)";
         db.execSQL(createTable);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 3) {
@@ -59,7 +59,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void deleteAllScanResults() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.beginTransaction();  // Start the transaction
+        try {
+            db.delete(TABLE_NAME, null, null);
+            db.setTransactionSuccessful();  // Mark the transaction as successful
+        } catch (Exception e) {
+            // Log the exception here
+            Log.e("DatabaseHelper", "Error while trying to delete all scan results", e);
+        } finally {
+            db.endTransaction();  // End the transaction
+            db.close();  // Close the database
+        }
     }
 
     private String getCurrentTime() {

@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="95dp"
-            android:background="#001F0000"
+            android:background="#00FFFFFF"
             android:text="@string/deleteButton"
             android:textAllCaps="false"
             android:textColor="@color/black"
