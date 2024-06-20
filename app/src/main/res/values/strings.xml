@@ -9,6 +9,7 @@
 
     <!--    Scan APK fragment contents-->
     <string name="sc_file_name">File name:</string>
+    <string name="scan_process">Scanning process</string>
 
 
     <string name="database_show">Database Content</string>
@@ -20,8 +21,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="fileSelectorButton">Click to Select File</string>
-    <string name="uploadButton">Click to Scan File</string>
+    <string name="fileSelectorButton">Select File</string>
+    <string name="uploadButton">Scan File</string>
     <string name="downloadButton">Click to View Results</string>
     <string name="clearButton">Click to Clear Database</string>
     <string name="deleteButton">Clear Results</string>

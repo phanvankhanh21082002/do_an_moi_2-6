@@ -60,7 +60,6 @@ public class ScanAPK extends AppCompatActivity {
     TextView scanCompleteTextView;
     Button downloadButton;
     TextView downloadedTextView;
-    Button showDatabaseButton;
     DatabaseHelper databaseHelper;
     FilePickerDialog dialog;
     String fileName=null;
@@ -82,7 +81,7 @@ public class ScanAPK extends AppCompatActivity {
         selectedFileTextView = (TextView) findViewById(R.id.selectedFileTextView);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         scanCompleteTextView = (TextView) findViewById(R.id.scanCompleteTextView);
-        showDatabaseButton = findViewById(R.id.showDatabaseButton);
+
         databaseHelper = new DatabaseHelper(this);
 
         setupFilePickerLauncher();
@@ -93,13 +92,7 @@ public class ScanAPK extends AppCompatActivity {
             }
         });
 
-        showDatabaseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ScanAPK.this, ShowDatabaseActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

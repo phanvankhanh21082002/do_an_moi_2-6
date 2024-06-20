@@ -19,7 +19,7 @@
 
     <style name="CustomButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@null</item> <!-- Remove default background tint -->
-        <item name="android:background">@drawable/scan_custom_button1</item>
+        <item name="android:background">@drawable/scan_custom_button2</item>
     </style>
     
 </resources>

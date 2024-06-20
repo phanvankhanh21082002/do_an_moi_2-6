@@ -5,6 +5,11 @@
     <color name="red">#FFFF0000</color>
     <color name="green">#FF00FF00</color>
 
+    <color name="darkGreen">#034803</color>
+    <color name="lightGreen">#276D29</color>
+    <color name="darkBlue">#0000AE</color>
+    <color name="lightBlue">#0ADAD7</color>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#FFFFFFFF</color>
     <color name="colorAccent">#FF4081</color>

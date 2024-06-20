@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,9 +8,14 @@
     tools:context=".ui.apk_scan.ScanAPK">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -20,62 +25,101 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
+
     <Button
         android:id="@+id/fileSelectorButton"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
         style="@style/CustomButton"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="284dp"
         android:fadingEdge="horizontal"
         android:text="@string/fileSelectorButton"
-        android:textColor="@color/purple_500"/>
-
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/selectedFileTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/fileSelectorButton"
-        android:layout_marginTop="24dp"
-        android:textColor="@color/black" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fileSelectorButton" />
 
     <Button
         android:id="@+id/uploadButton"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
         style="@style/CustomButton"
-        android:layout_alignParentStart="true"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/selectedFileTextView"
+        android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:fadingEdge="horizontal"
         android:text="@string/uploadButton"
-        android:textColor="@color/purple_500" />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectedFileTextView" />
+
 
     <TextView
         android:id="@+id/scanCompleteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/uploadButton"
-        android:layout_marginTop="24dp"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/showDatabaseButton"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        style="@style/CustomButton"
-        android:layout_below="@+id/scanCompleteTextView"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp"
-        android:text="@string/downloadButton"
-        android:textColor="@color/white"
-        android:background="@drawable/scan_custom_button2"
-        android:visibility="visible" />
+        android:layout_marginTop="40dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.474"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploadButton" />
+
+    <ImageView
+        android:id="@+id/logo_scanning"
+        android:layout_width="163dp"
+        android:layout_height="143dp"
+        android:layout_marginTop="112dp"
+        android:contentDescription="@string/scan_process"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_scanning" />
+
+    <ImageView
+        android:id="@+id/log_start_scan"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="140dp"
+        android:contentDescription="@string/scan_process"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_start_scan" />
+
+    <ImageView
+        android:id="@+id/logo_scan_completed"
+        android:contentDescription="@string/scan_process"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_scan_completed" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
