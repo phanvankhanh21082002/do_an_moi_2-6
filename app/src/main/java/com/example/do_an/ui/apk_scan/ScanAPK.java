@@ -68,6 +68,7 @@ public class ScanAPK extends AppCompatActivity {
     private ImageView startScan;
     private ImageView scanningProcess;
     private ImageView scanCompleted;
+    private ImageView scanFailed;
     private TextView letScan;
 
     @Override
@@ -92,6 +93,7 @@ public class ScanAPK extends AppCompatActivity {
         startScan = (ImageView) findViewById(R.id.log_start_scan);
         scanningProcess = (ImageView) findViewById(R.id.logo_scanning);
         scanCompleted = (ImageView) findViewById(R.id.logo_scan_completed);
+        scanFailed = (ImageView) findViewById(R.id.logo_scan_failed);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -100,6 +102,10 @@ public class ScanAPK extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pickFile();
+                startScan.setVisibility(View.VISIBLE);
+                scanFailed.setVisibility(View.GONE);
+                scanningProcess.setVisibility(View.GONE);
+                scanCompleted.setVisibility(View.GONE);
             }
         });
 
@@ -130,6 +136,7 @@ public class ScanAPK extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 startScan.setVisibility(View.GONE);
+                                scanFailed.setVisibility(View.GONE);
                                 scanningProcess.setVisibility(View.VISIBLE);
                                 uploadFile(fileUri);
                             }
@@ -173,6 +180,8 @@ public class ScanAPK extends AppCompatActivity {
                     public void onFailure(Call call, IOException e) {
                         runOnUiThread(() -> {
                             dialog.dismiss();
+                            scanningProcess.setVisibility(View.GONE);
+                            scanFailed.setVisibility(View.VISIBLE);
                             showToast("Scan failed: " + e.getMessage());
                         });
                     }
@@ -186,6 +195,7 @@ public class ScanAPK extends AppCompatActivity {
                         } else {
                             runOnUiThread(() -> {
                                 dialog.dismiss();
+
                                 showToast("Scan failed with code: " + response.code());
                             });
                         }
@@ -211,11 +221,12 @@ public class ScanAPK extends AppCompatActivity {
                     int responseCode = connection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         reportReady = true; // Set flag to true to break the loop
-                        scanningProcess.setVisibility(View.GONE);
-                        scanCompleted.setVisibility(View.VISIBLE);
+
                         handler.post(() -> {
                             dialog.dismiss();
                             showToast("Report is ready!");
+                            scanningProcess.setVisibility(View.GONE);
+                            scanCompleted.setVisibility(View.VISIBLE);
                             try {
                                 displayReportContent(connection); // Optional, to display report content
                             } catch (IOException e) {

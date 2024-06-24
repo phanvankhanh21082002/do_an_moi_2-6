@@ -123,6 +123,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_scan_completed" />
 
+    <ImageView
+        android:id="@+id/logo_scan_failed"
+        android:layout_width="115dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="132dp"
+        android:contentDescription="@string/scan_process"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_scan_failed" />
+
     <TextView
         android:id="@+id/text_notify1"
         android:layout_width="wrap_content"
