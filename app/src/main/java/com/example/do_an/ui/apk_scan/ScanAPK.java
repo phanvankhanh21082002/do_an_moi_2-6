@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,11 @@ public class ScanAPK extends AppCompatActivity {
     FilePickerDialog dialog;
     String fileName=null;
 
+    private ImageView startScan;
+    private ImageView scanningProcess;
+    private ImageView scanCompleted;
+    private TextView letScan;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +87,11 @@ public class ScanAPK extends AppCompatActivity {
         selectedFileTextView = (TextView) findViewById(R.id.selectedFileTextView);
         uploadButton = (Button) findViewById(R.id.uploadButton);
         scanCompleteTextView = (TextView) findViewById(R.id.scanCompleteTextView);
+        letScan = (TextView) findViewById(R.id.text_notify1);
+
+        startScan = (ImageView) findViewById(R.id.log_start_scan);
+        scanningProcess = (ImageView) findViewById(R.id.logo_scanning);
+        scanCompleted = (ImageView) findViewById(R.id.logo_scan_completed);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -111,11 +122,15 @@ public class ScanAPK extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Uri fileUri = result.getData().getData();
                         fileName = getFileName(fileUri);
+                        letScan.setVisibility(View.GONE);
                         selectedFileTextView.setVisibility(View.VISIBLE);
                         selectedFileTextView.setText("Selected file: " + fileName);
                         uploadButton.setOnClickListener(new View.OnClickListener() {
+
                             @Override
                             public void onClick(View v) {
+                                startScan.setVisibility(View.GONE);
+                                scanningProcess.setVisibility(View.VISIBLE);
                                 uploadFile(fileUri);
                             }
                         });
@@ -133,7 +148,7 @@ public class ScanAPK extends AppCompatActivity {
     private void uploadFile(Uri fileUri) {
         // Create and show a ProgressDialog
         ProgressDialog dialog = new ProgressDialog(ScanAPK.this);
-        dialog.setMessage("Uploading file...");
+        dialog.setMessage("Scanning file...");
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.show();
@@ -148,7 +163,7 @@ public class ScanAPK extends AppCompatActivity {
                         .build();
 
                 Request request = new Request.Builder()
-                        .url("http://34.143.194.2:3000/upload_file")
+                        .url("http://192.168.1.139:3000/upload_file")
                         .post(requestBody)
                         .build();
 
@@ -158,7 +173,7 @@ public class ScanAPK extends AppCompatActivity {
                     public void onFailure(Call call, IOException e) {
                         runOnUiThread(() -> {
                             dialog.dismiss();
-                            showToast("Upload failed: " + e.getMessage());
+                            showToast("Scan failed: " + e.getMessage());
                         });
                     }
 
@@ -171,7 +186,7 @@ public class ScanAPK extends AppCompatActivity {
                         } else {
                             runOnUiThread(() -> {
                                 dialog.dismiss();
-                                showToast("Upload failed with code: " + response.code());
+                                showToast("Scan failed with code: " + response.code());
                             });
                         }
                     }
@@ -190,12 +205,14 @@ public class ScanAPK extends AppCompatActivity {
             boolean reportReady = false;
             while (!reportReady) {
                 try {
-                    URL url = new URL("http://34.143.194.2/reports/" + fileName + ".txt");
+                    URL url = new URL("http://192.168.1.139/reports/" + fileName + ".txt");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         reportReady = true; // Set flag to true to break the loop
+                        scanningProcess.setVisibility(View.GONE);
+                        scanCompleted.setVisibility(View.VISIBLE);
                         handler.post(() -> {
                             dialog.dismiss();
                             showToast("Report is ready!");

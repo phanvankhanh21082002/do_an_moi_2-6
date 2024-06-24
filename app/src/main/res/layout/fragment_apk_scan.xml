@@ -88,38 +88,52 @@
 
     <ImageView
         android:id="@+id/logo_scanning"
-        android:layout_width="163dp"
-        android:layout_height="143dp"
-        android:layout_marginTop="112dp"
+        android:layout_width="230dp"
+        android:layout_height="174dp"
+        android:layout_marginTop="96dp"
         android:contentDescription="@string/scan_process"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_scanning" />
 
     <ImageView
         android:id="@+id/log_start_scan"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="140dp"
+        android:layout_width="115dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="124dp"
         android:contentDescription="@string/scan_process"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_start_scan" />
 
     <ImageView
         android:id="@+id/logo_scan_completed"
+        android:layout_width="115dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="132dp"
         android:contentDescription="@string/scan_process"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="140dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_scan_completed" />
+
+    <TextView
+        android:id="@+id/text_notify1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="244dp"
+        android:text="@string/let_scan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

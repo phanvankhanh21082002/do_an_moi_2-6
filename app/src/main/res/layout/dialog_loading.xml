@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/progressBar"
         android:layout_marginLeft="10dp"
-        android:text="Uploading..."
+        android:text="@string/txt_scan"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

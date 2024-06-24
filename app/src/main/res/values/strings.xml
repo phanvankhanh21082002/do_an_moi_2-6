@@ -10,6 +10,8 @@
     <!--    Scan APK fragment contents-->
     <string name="sc_file_name">File name:</string>
     <string name="scan_process">Scanning process</string>
+    <string name="txt_scan">Scanning.....</string>
+    <string name="let_scan">Select a file to scan</string>
 
 
     <string name="database_show">Database Content</string>
