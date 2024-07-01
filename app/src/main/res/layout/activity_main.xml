@@ -1,66 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="APK Scan"
+            app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
-    <Button
-        android:id="@+id/fileSelectorButton"
-        style="android:buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="horizontal"
-        android:text="@string/fileSelectorButton" />
+
+    <ImageView
+        android:id="@+id/apkImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_launcher_background" />
 
     <TextView
         android:id="@+id/selectedFileTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/fileSelectorButton"
-        android:layout_marginTop="24dp"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/uploadButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/selectedFileTextView"
-        android:layout_marginTop="24dp"
-        android:text="@string/uploadButton" />
+        android:layout_below="@id/apkImageView"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/scanCompleteTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/uploadButton"
-        android:layout_marginTop="24dp"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/showDatabaseButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/scanCompleteTextView"
-        android:layout_marginTop="24dp"
-        android:text="@string/downloadButton"
+        android:layout_below="@id/selectedFileTextView"
+        android:text="Scan Result"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scanCompleteTextView"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/fileSelectorButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select File"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/uploadButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Scan File"
+            android:backgroundTint="@color/purple_700"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/detailsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Details"
+        android:layout_below="@id/buttonLayout"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@android:color/holo_orange_light"
+        android:textColor="@android:color/white"
         android:visibility="visible" />
+
+    <Button
+        android:id="@+id/logButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Log"
+        android:layout_below="@id/detailsButton"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>
