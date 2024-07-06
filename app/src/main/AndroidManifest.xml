@@ -35,11 +35,12 @@
         </activity>
 
         <activity
-            android:name=".ui.apk_scan.ShowDatabaseActivity"
+            android:name=".ui.apk_scan.LogActivity"
             android:exported="true"
             android:label="@string/database_label"
             android:theme="@style/Theme.Do_an.NoActionBar">
         </activity>
+
 
     </application>
 

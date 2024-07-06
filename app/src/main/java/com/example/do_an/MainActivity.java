@@ -1,10 +1,8 @@
 package com.example.do_an;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-
-
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +14,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.do_an.ui.apk_scan.ScanAPK;
 import com.google.android.material.navigation.NavigationView;
 
 
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         //
-        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us, R.id.nav_database)
+        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us)
                 .setOpenableLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mappbarconfiguration);
@@ -47,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-
     }
+
+
 
     //should close drawer on back press
     @Override

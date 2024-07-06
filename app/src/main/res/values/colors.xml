@@ -9,6 +9,8 @@
     <color name="lightGreen">#276D29</color>
     <color name="darkBlue">#0000AE</color>
     <color name="lightBlue">#0ADAD7</color>
+    <color name="darkYellow">#CB9605</color>
+    <color name="lightYellow">#FFD54F</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#FFFFFFFF</color>

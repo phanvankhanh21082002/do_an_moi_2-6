@@ -19,9 +19,9 @@
 
     <activity
         android:id="@+id/nav_database"
-        android:name="com.example.do_an.ui.apk_scan.ShowDatabaseActivity"
+        android:name="com.example.do_an.ui.apk_scan.LogActivity"
         android:label="@string/database_label"
-        tools:layout="@layout/activity_show_database"/>
+        tools:layout="@layout/activity_log"/>
 
     <fragment
         android:id="@+id/nav_about_us"

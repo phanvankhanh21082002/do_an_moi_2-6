@@ -13,12 +13,14 @@ import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "fileScan.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String TABLE_NAME = "scan_results";
     private static final String COLUMN_FILE_NAME = "file_name";
     private static final String COLUMN_TIME = "time";
     private static final String COLUMN_RESULT = "result";
+    private static final String COLUMN_FILE_HASH = "file_hash";
+    private static final String COLUMN_LINK = "link";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,47 +31,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_FILE_NAME + " TEXT, " +
                 COLUMN_TIME + " TEXT, " +
-                COLUMN_RESULT + " TEXT)";
+                COLUMN_RESULT + " TEXT, " +
+                COLUMN_FILE_HASH + " TEXT, " +
+                COLUMN_LINK + " TEXT)";
         db.execSQL(createTable);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 3) {
-            // Trong trường hợp cần thiết hơn, bạn có thể sử dụng ALTER TABLE để chỉnh sửa cấu trúc
-            // Hiện tại, chúng ta chỉ xóa và tạo lại bảng để đơn giản
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
     }
 
-    public boolean insertScanResult(String fileName, String result) {
+    public boolean insertScanResult(String fileName, String fileHash, String result, String link) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_FILE_NAME, fileName);
         contentValues.put(COLUMN_TIME, getCurrentTime());
         contentValues.put(COLUMN_RESULT, result);
+        contentValues.put(COLUMN_FILE_HASH, fileHash);
+        contentValues.put(COLUMN_LINK, link);
         long resultId = db.insert(TABLE_NAME, null, contentValues);
         return resultId != -1;
     }
 
+    public void updateScanResultTime(String fileHash) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_TIME, getCurrentTime());
+        db.update(TABLE_NAME, contentValues, COLUMN_FILE_HASH + " = ?", new String[]{fileHash});
+    }
+
+    public Cursor getScanResultByFileHash(String fileHash) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_NAME, null, COLUMN_FILE_HASH + " = ?", new String[]{fileHash}, null, null, null);
+    }
+
     public Cursor getAllScanResults() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_NAME, null, null, null, null, null, null);
+        return db.query(TABLE_NAME, null, null, null, null, null, COLUMN_TIME + " DESC");
     }
 
     public void deleteAllScanResults() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();  // Start the transaction
-        try {
-            db.delete(TABLE_NAME, null, null);
-            db.setTransactionSuccessful();  // Mark the transaction as successful
-        } catch (Exception e) {
-            // Log the exception here
-            Log.e("DatabaseHelper", "Error while trying to delete all scan results", e);
-        } finally {
-            db.endTransaction();  // End the transaction
-            db.close();  // Close the database
-        }
+        db.execSQL("DELETE FROM " + TABLE_NAME);
     }
 
     private String getCurrentTime() {

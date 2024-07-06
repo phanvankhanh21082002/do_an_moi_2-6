@@ -5,18 +5,23 @@
     <!--    Fragment names -->
     <string name="apk_scan_label">APK Scan</string>
     <string name="about_us_label">About Us</string>
-    <string name="database_label">Results</string>
+    <string name="database_label">Scan Logs</string>
+    <string name="details_file">View details</string>
 
     <!--    Scan APK fragment contents-->
     <string name="sc_file_name">File name:</string>
     <string name="scan_process">Scanning process</string>
     <string name="txt_scan">Scanning.....</string>
     <string name="let_scan">Select a file to scan</string>
+    <string name="apk_image">apk image</string>
+    <string name="view_details">View Details</string>
+    <string name="view_log">View Logs</string>
 
 
     <string name="database_show">Database Content</string>
     <string name="database_clear">Clear Database</string>
     <string name="database_export">Export Database</string>
+    <string name="clear_log">Clear Logs</string>"
 
     <string name="home_appName">Android-malware Agency</string>
 
@@ -34,7 +39,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="menu_home">Home</string>
     <string name="menu_apk_scan">APK Scan</string>
-    <string name="menu_db_show">Results</string>"
+    <string name="menu_db_show">Logs</string>"
     <string name="menu_about_us">About Us</string>
     <string name="menu_permission_list">Permission List</string>
 
