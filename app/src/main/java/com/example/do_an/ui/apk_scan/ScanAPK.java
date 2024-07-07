@@ -143,10 +143,9 @@ public class ScanAPK extends AppCompatActivity {
                         } catch (PackageManager.NameNotFoundException e) {
                             apkImageView.setImageResource(R.drawable.ic_launcher_background);
                         }
-                        startScan.setVisibility(View.GONE);
-                        scanFailed.setVisibility(View.GONE);
-                        scanningProcess.setVisibility(View.VISIBLE);
-                        checkAndUploadFile(fileUri);
+                        //checkAndUploadFile(fileUri);
+                        uploadButton.setOnClickListener(v -> uploadFile(fileUri));
+
 
                     }
                 });
@@ -168,10 +167,7 @@ public class ScanAPK extends AppCompatActivity {
             @SuppressLint("Range") String existingResult = cursor.getString(cursor.getColumnIndex("result"));
             @SuppressLint("Range") String existingLink = cursor.getString(cursor.getColumnIndex("link"));
 
-            // Update the time in the database
             databaseHelper.updateScanResultTime(fileHash);
-
-            // Display the existing result
             displayExistingResult(existingFileName, existingResult, existingLink);
 
         } else {
@@ -188,6 +184,9 @@ public class ScanAPK extends AppCompatActivity {
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.show();
+
+        startScan.setVisibility(View.GONE);
+        scanningProcess.setVisibility(View.VISIBLE);
 
         new Thread(() -> {
             try {
