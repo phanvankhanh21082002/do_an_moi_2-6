@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightGray"
+    tools:context=".ui.hardware.MonitoringHardware">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        style="@style/CustomBox">
+
+        <TextView
+            android:id="@+id/storage_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/STORAGE"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"/>
+
+        <ProgressBar
+            android:id="@+id/storage_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progressDrawable="@drawable/custom_progressbar_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:id="@+id/storage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:text=""
+            android:textAllCaps="false"
+            android:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/ram_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/RAM"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_vertical"/>
+
+        <ProgressBar
+            android:id="@+id/ram_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progressDrawable="@drawable/custom_progressbar_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:id="@+id/ram_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="16dp"
+            android:text=""
+            android:textAllCaps="false"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <!-- Total CPU usage section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TOTAL_CPU"
+        android:textColor="@color/black"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"/>
+
+    <!-- Total CPU usage section -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp">
+
+        <ProgressBar
+            android:id="@+id/cpu_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="340dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:max="100"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/cpu_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black">
+        </TextView>
+    </LinearLayout>
+    <!-- Total CPU usage section -->
+
+
+    <!-- Process info section -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TableLayout
+                android:id="@+id/cpu_info_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1,2,3,4,5"
+                android:padding="0dp"
+                android:background="#EFEFEF">
+
+                <TableRow>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="PID"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="%CPU"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="%MEM"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="TIME+"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="COMM"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+    </ScrollView>
+    <!-- Process info section -->
+
+</LinearLayout>

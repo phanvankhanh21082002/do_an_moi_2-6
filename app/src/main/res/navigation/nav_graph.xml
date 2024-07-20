@@ -16,12 +16,17 @@
         android:name="com.example.do_an.ui.apk_scan.ScanAPK"
         android:label="@string/apk_scan_label"
         tools:layout="@layout/fragment_apk_scan"/>
-
     <activity
         android:id="@+id/nav_database"
         android:name="com.example.do_an.ui.apk_scan.LogActivity"
         android:label="@string/database_label"
-        tools:layout="@layout/activity_log"/>
+        tools:layout="@layout/activity_log"/>>
+
+    <fragment
+        android:id="@+id/nav_hardware"
+        android:name="com.example.do_an.ui.hardware.MonitoringHardware"
+        android:label="@string/hardware_label"
+        tools:layout="@layout/fragment_hardware_monitoring"/>
 
     <fragment
         android:id="@+id/nav_about_us"

@@ -1,14 +1,16 @@
 package com.example.do_an;
 
-import android.content.ClipData;
-import android.content.Intent;
+
+
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,16 +32,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         //
-        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us)
+        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us, R.id.nav_hardware)
                 .setOpenableLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mappbarconfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        @SuppressLint("CutPasteId") DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -48,16 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //should close drawer on back press
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
-        }else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -65,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mappbarconfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
 }
 
 

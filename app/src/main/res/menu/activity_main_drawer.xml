@@ -9,6 +9,10 @@
             android:icon="@drawable/homepage"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_hardware"
+            android:icon="@drawable/hardware"
+            android:title="@string/menu_hardware_status" />
+        <item
             android:id="@+id/nav_apk_scan"
             android:icon="@drawable/scan_apk"
             android:title="@string/menu_apk_scan" />

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:navigationIcon="@drawable/ic_menu_white"
+            app:navigationIcon="@drawable/ic_menux24"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 

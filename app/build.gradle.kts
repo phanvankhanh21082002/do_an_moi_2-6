@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.do_an"
-        minSdk = 23
+        minSdk = 29
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -35,6 +35,17 @@ android {
 }
 
 dependencies {
+    val libsuVersion = "6.0.0"
+
+    // The core module that provides APIs to a shell
+    implementation("com.github.topjohnwu.libsu:core:$libsuVersion")
+
+    // Optional: APIs for creating root services. Depends on ":core"
+    implementation("com.github.topjohnwu.libsu:service:$libsuVersion")
+
+    // Optional: Provides remote file system support
+    implementation("com.github.topjohnwu.libsu:nio:$libsuVersion")
+
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
     implementation ("androidx.sqlite:sqlite:2.1.0")
     implementation ("androidx.activity:activity:1.2.0")

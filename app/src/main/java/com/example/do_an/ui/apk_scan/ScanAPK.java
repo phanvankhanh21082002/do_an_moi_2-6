@@ -29,7 +29,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 
-import com.example.do_an.MainActivity;
 import com.example.do_an.R;
 import com.github.angads25.filepicker.view.FilePickerDialog;
 
@@ -54,9 +53,9 @@ import okhttp3.Response;
 
 public class ScanAPK extends AppCompatActivity {
     private ActivityResultLauncher<Intent> filePickerLauncher;
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler handler = new Handler(Looper.getMainLooper());
-    private OkHttpClient client = new OkHttpClient();
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final OkHttpClient client = new OkHttpClient();
     Button fileSelectorButton;
     TextView selectedFileTextView;
     Button uploadButton;
@@ -73,7 +72,6 @@ public class ScanAPK extends AppCompatActivity {
     private ImageView scanningProcess;
     private ImageView scanCompleted;
     private ImageView scanFailed;
-    private TextView letScan;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,19 +86,18 @@ public class ScanAPK extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fileSelectorButton = (Button) findViewById(R.id.fileSelectorButton);
-        selectedFileTextView = (TextView) findViewById(R.id.selectedFileTextView);
-        uploadButton = (Button) findViewById(R.id.uploadButton);
-        scanCompleteTextView = (TextView) findViewById(R.id.scanCompleteTextView);
-        viewDetailsButton = (Button) findViewById(R.id.detailsButton);
-        apkImageView = (ImageView) findViewById(R.id.apkImageView);
-        //letScan = (TextView) findViewById(R.id.text_notify1);
+        fileSelectorButton = findViewById(R.id.fileSelectorButton);
+        selectedFileTextView = findViewById(R.id.selectedFileTextView);
+        uploadButton = findViewById(R.id.uploadButton);
+        scanCompleteTextView = findViewById(R.id.scanCompleteTextView);
+        viewDetailsButton = findViewById(R.id.detailsButton);
+        apkImageView = findViewById(R.id.apkImageView);
 
-        startScan = (ImageView) findViewById(R.id.log_start_scan);
-        scanningProcess = (ImageView) findViewById(R.id.logo_scanning);
-        scanCompleted = (ImageView) findViewById(R.id.logo_scan_completed);
-        scanFailed = (ImageView) findViewById(R.id.logo_scan_failed);
-        Button logButton = (Button) findViewById(R.id.logButton);
+        startScan = findViewById(R.id.log_start_scan);
+        scanningProcess = findViewById(R.id.logo_scanning);
+        scanCompleted = findViewById(R.id.logo_scan_completed);
+        scanFailed = findViewById(R.id.logo_scan_failed);
+        Button logButton = findViewById(R.id.logButton);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -118,7 +115,7 @@ public class ScanAPK extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -133,7 +130,6 @@ public class ScanAPK extends AppCompatActivity {
                         Uri fileUri = result.getData().getData();
                         fileName = getFileName(fileUri);
                         fileHash = calculateFileHash(fileUri);
-                        //letScan.setVisibility(View.GONE);
                         selectedFileTextView.setVisibility(View.VISIBLE);
                         selectedFileTextView.setText("Selected file: " + fileName);
 
@@ -143,8 +139,8 @@ public class ScanAPK extends AppCompatActivity {
                         } catch (PackageManager.NameNotFoundException e) {
                             apkImageView.setImageResource(R.drawable.ic_launcher_background);
                         }
-                        //checkAndUploadFile(fileUri);
-                        uploadButton.setOnClickListener(v -> uploadFile(fileUri));
+                        checkAndUploadFile(fileUri);
+                        //uploadButton.setOnClickListener(v -> uploadFile(fileUri));
 
 
                     }
@@ -202,7 +198,7 @@ public class ScanAPK extends AppCompatActivity {
                         .build();
 
                 Request request = new Request.Builder()
-                        .url("http://10.10.10.16:3000/upload_file")
+                        .url("http://34.124.235.94:3000/upload_file")
                         .post(requestBody)
                         .build();
 
@@ -247,7 +243,7 @@ public class ScanAPK extends AppCompatActivity {
             boolean reportReady = false;
             while (!reportReady) {
                 try {
-                    URL url = new URL("http://10.10.10.16/reports_txt/" + fileHash + ".txt");
+                    URL url = new URL("http://34.124.235.94/reports_txt/" + fileHash + ".txt");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();
@@ -304,7 +300,7 @@ public class ScanAPK extends AppCompatActivity {
                 status = "Clean";
             }
 
-            String link = "http://10.10.10.16/reports_html/" + fileHash + ".html";
+            String link = "http://34.124.235.94/reports_html/" + fileHash + ".html";
             databaseHelper.insertScanResult(fileName, fileHash, status, link);
 
             scanCompleteTextView.setVisibility(View.VISIBLE);

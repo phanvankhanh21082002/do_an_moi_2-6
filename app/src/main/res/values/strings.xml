@@ -2,11 +2,13 @@
     <string name="app_name">AAA</string>
     <string name="action_settings">Settings</string>
 
-    <!--    Fragment names -->
+    <!--    Graph Labels -->
     <string name="apk_scan_label">APK Scan</string>
     <string name="about_us_label">About Us</string>
     <string name="database_label">Scan Logs</string>
     <string name="details_file">View details</string>
+    <string name="hardware_label">Hardware Monitor</string>
+    <string name="cpu_monitoring_label">Hardware status</string>
 
     <!--    Scan APK fragment contents-->
     <string name="sc_file_name">File name:</string>
@@ -16,7 +18,19 @@
     <string name="apk_image">apk image</string>
     <string name="view_details">View Details</string>
     <string name="view_log">View Logs</string>
+    <string name="fileSelectorButton">Select File</string>
+    <string name="uploadButton">Scan File</string>
+    <string name="downloadButton">Click to View Results</string>
+    <string name="clearButton">Click to Clear Database</string>
+    <string name="deleteButton">Clear Results</string>
 
+
+    <!--    Hardware status fragment contents -->
+    <string name="hardware_status">Hardware Status</string>
+    <string name="monitoring">Start Monitor</string>
+    <string name="STORAGE">STORAGE</string>
+    <string name="RAM">RAM</string>
+    <string name="TOTAL_CPU">Total CPU used</string>
 
     <string name="database_show">Database Content</string>
     <string name="database_clear">Clear Database</string>
@@ -28,16 +42,15 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="fileSelectorButton">Select File</string>
-    <string name="uploadButton">Scan File</string>
-    <string name="downloadButton">Click to View Results</string>
-    <string name="clearButton">Click to Clear Database</string>
-    <string name="deleteButton">Clear Results</string>
-
     <string name="nav_header_title">Android-malware Agency</string>
     <string name="nav_header_subtitle">GSU24IA03</string>
     <string name="nav_header_desc">Navigation header</string>
+
+
+    <!--    menu options-->
     <string name="menu_home">Home</string>
+    <string name="menu_hardware_status">Hardware Status</string>
+    <string name="menu_cpu_mor">CPU Monitoring</string>
     <string name="menu_apk_scan">APK Scan</string>
     <string name="menu_db_show">Logs</string>"
     <string name="menu_about_us">About Us</string>
