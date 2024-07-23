@@ -43,6 +43,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,6 +61,8 @@ public class MonitoringHardware extends Fragment{
     private Runnable updateRunnable;
     private static final String TAG = "MonitoringHardware";
     private TextView cpuCoreTextView;
+    private TextView cpuDetailsTextView;
+    private int coreCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -67,10 +72,11 @@ public class MonitoringHardware extends Fragment{
         ramProgressBar = view.findViewById(R.id.ram_progress);
         storageTextView = view.findViewById(R.id.storage_text);
         ramTextView = view.findViewById(R.id.ram_text);
+        cpuDetailsTextView = view.findViewById(R.id.cpu_details);
 
         cpuCoreTextView = view.findViewById(R.id.cpu_core);
         cpuPercentageTextView = view.findViewById(R.id.cpu_percentage);
-        //cpuProgressBar = view.findViewById(R.id.cpu_progress_bar);
+        cpuProgressBar = view.findViewById(R.id.cpu_progress_bar);
 
         handler = new Handler(Looper.getMainLooper());
 
@@ -114,9 +120,10 @@ public class MonitoringHardware extends Fragment{
             updateRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    updateCpuInfo();
-                    //updateCpuProcess();
-                    handler.postDelayed(this, 2000); // Update every 2 second
+                    updateCpuDetails();
+                    updateCpuTotalUsage();
+                    updateCpuProcess();
+                    handler.postDelayed(this, 1000); // Update every 1 second
                 }
             };
         }
@@ -168,10 +175,11 @@ public class MonitoringHardware extends Fragment{
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            int coreCount = Runtime.getRuntime().availableProcessors();
+            int cores = Runtime.getRuntime().availableProcessors();
+            coreCount = cores; // store the number of cores for calculation
             handler.post(() -> {
-                if (coreCount > 0) {
-                    cpuCoreTextView.setText(coreCount + " cores");
+                if (cores > 0) {
+                    cpuCoreTextView.setText(cores + " cores");
                 } else {
                     cpuCoreTextView.setText("Error fetching core count");
                 }
@@ -179,33 +187,117 @@ public class MonitoringHardware extends Fragment{
         });
     }
 
-    private void updateCpuInfo() {
+    private String parseCpuDetails(String result) {
+        String[] lines = result.split("\n");
+        for (String line : lines) {
+            if (line.matches("\\d+%cpu.*")) {
+                return "Explanation: each cpu core has 100% total\nTotal CPU usage:%cpu \nUser processes:%user \nSystem processes:%sys\nIdle CPUs:%idle\n\n" + line;
+            }
+        }
+        return "No CPU details found";
+    }
+
+    private void updateCpuDetails() {
         new Thread(() -> {
-            String cpuInfo = readCpuInfo();
-            if (cpuInfo != null) {
+            String result = getCpuDetails();
+            if (result != null) {
+                Log.d("MonitoringHardware", "CPU Details: " + result);
+                String cpuDetails = parseCpuDetails(result);
                 requireActivity().runOnUiThread(() -> {
-                    cpuPercentageTextView.setText(cpuInfo);
+                    cpuDetailsTextView.setText(cpuDetails);
                 });
             } else {
-                Log.e("MonitoringHardware", "Failed to read CPU info");
+                Log.e("MonitoringHardware", "Failed to get CPU details");
+                requireActivity().runOnUiThread(() -> {
+                    cpuDetailsTextView.setText("Failed to get CPU details");
+                });
             }
         }).start();
     }
 
-    private String readCpuInfo() {
-        StringBuilder cpuInfo = new StringBuilder();
+    private String getCpuDetails() {
+        StringBuilder output = new StringBuilder();
+        Process process = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("/proc/cpuinfo"));
+            String[] command = {"/system/bin/sh", "-c", "top -b -n 1"};
+            process = Runtime.getRuntime().exec(command);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                cpuInfo.append(line).append("\n");
+                output.append(line).append("\n");
             }
             reader.close();
-        } catch (IOException e) {
-            Log.e("MonitoringHardware", "Error reading /proc/cpuinfo", e);
-            return null;
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            Log.e("MonitoringHardware", "Error running command", e);
+        } finally {
+            if (process != null) {
+                process.destroy();
+            }
         }
-        return cpuInfo.toString();
+        return output.toString();
+    }
+
+    private void updateCpuTotalUsage() {
+        new Thread(() -> {
+            String result = getCpuTotalUsage();
+            if (result != null && !result.isEmpty()) {
+                double totalCpuUsage = calculateTotalCpuUsage(result);
+                if (isAdded()) { // Check if the fragment is added to its activity
+                    requireActivity().runOnUiThread(() -> {
+                        cpuPercentageTextView.setText(String.format("%.2f%%", totalCpuUsage));
+                        cpuProgressBar.setProgress((int) totalCpuUsage);
+                    });
+                }
+            } else {
+                if (isAdded()) { // Check if the fragment is added to its activity
+                    requireActivity().runOnUiThread(() -> cpuPercentageTextView.setText("No CPU details found"));
+                }
+            }
+        }).start();
+    }
+    private double calculateTotalCpuUsage(String idleDetails) {
+        if (coreCount == 0) {
+            return 0; // Avoid division by zero if core count is not set
+        }
+        double idleTime = Double.parseDouble(idleDetails.replace("%idle", "").trim());
+        return (coreCount * 100) - idleTime;
+    }
+
+    private String getCpuTotalUsage() {
+        StringBuilder output = new StringBuilder();
+        Process process = null;
+        try {
+            String[] command = {"/system/bin/sh", "-c", "top -b -n 1"};
+            process = Runtime.getRuntime().exec(command);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            List<String> lines = new ArrayList<>();
+            while ((line = reader.readLine()) != null) {
+                Log.d("MonitoringHardware", line);
+                lines.add(line.trim());
+            }
+            reader.close();
+            process.waitFor();
+
+            if (lines.size() > 3) {
+                String[] cpuLineParts = lines.get(3).split("\\s+");
+                for (String part : cpuLineParts) {
+                    if (part.contains("%idle")) {
+                        output.append(part);
+                        break;
+                    }
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            Log.e("MonitoringHardware", "Error executing command", e);
+        } finally {
+            if (process != null) {
+                process.destroy();
+            }
+        }
+        Log.d("MonitoringHardware", "Final output: " + output.toString());
+        return output.toString();
     }
 
 

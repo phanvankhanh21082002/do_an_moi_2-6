@@ -88,7 +88,6 @@ public class ScanAPK extends AppCompatActivity {
 
         fileSelectorButton = findViewById(R.id.fileSelectorButton);
         selectedFileTextView = findViewById(R.id.selectedFileTextView);
-        uploadButton = findViewById(R.id.uploadButton);
         scanCompleteTextView = findViewById(R.id.scanCompleteTextView);
         viewDetailsButton = findViewById(R.id.detailsButton);
         apkImageView = findViewById(R.id.apkImageView);

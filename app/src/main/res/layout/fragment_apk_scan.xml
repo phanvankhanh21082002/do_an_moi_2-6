@@ -69,24 +69,24 @@
         style="@style/CustomButton1"
         android:layout_width="380dp"
         android:layout_height="50dp"
-        android:layout_marginTop="148dp"
-        android:backgroundTint="@color/lightYellow"
+        android:layout_marginTop="104dp"
+        android:backgroundTint="@color/orange"
         android:text="@string/view_details"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <Button
         android:id="@+id/logButton"
         style="@style/CustomButton1"
-        android:layout_width="300dp"
+        android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/orange"
+        android:backgroundTint="@color/lightBlue"
         android:text="@string/view_log"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -156,31 +156,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_scan_failed" />
 
-    <Button
-        android:id="@+id/uploadButton"
-        style="@style/CustomButton"
-        android:layout_width="170dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="36dp"
-        android:text="@string/uploadButton"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.938"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+<!--    <Button-->
+<!--        android:id="@+id/uploadButton"-->
+<!--        style="@style/CustomButton"-->
+<!--        android:layout_width="170dp"-->
+<!--        android:layout_height="90dp"-->
+<!--        android:layout_marginTop="36dp"-->
+<!--        android:text="@string/uploadButton"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.938"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />-->
 
     <Button
         android:id="@+id/fileSelectorButton"
         style="@style/CustomButton"
-        android:layout_width="170dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/purple"
         android:text="@string/fileSelectorButton"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
