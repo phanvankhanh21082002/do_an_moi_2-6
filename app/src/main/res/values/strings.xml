@@ -30,7 +30,7 @@
     <string name="monitoring">Start Monitor</string>
     <string name="STORAGE">STORAGE</string>
     <string name="RAM">RAM</string>
-    <string name="TOTAL_CPU">Total CPU used</string>
+    <string name="TOTAL_CPU">CPU Information</string>
 
     <string name="database_show">Database Content</string>
     <string name="database_clear">Clear Database</string>

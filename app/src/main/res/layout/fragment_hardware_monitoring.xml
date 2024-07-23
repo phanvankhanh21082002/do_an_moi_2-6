@@ -82,40 +82,63 @@
     </LinearLayout>
 
     <!-- Total CPU usage section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/TOTAL_CPU"
-        android:textColor="@color/black"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="10dp"/>
-
-    <!-- Total CPU usage section -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="10dp">
-
-        <ProgressBar
-            android:id="@+id/cpu_progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="340dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:max="100"
-            android:layout_marginEnd="10dp"/>
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/cpu_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/TOTAL_CPU"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="10dp"/>
+        <TextView
+            android:id="@+id/cpu_core"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/black">
-        </TextView>
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="10dp"/>
     </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+
+<!--            <ProgressBar-->
+<!--                android:id="@+id/cpu_progress_bar"-->
+<!--                style="?android:attr/progressBarStyleHorizontal"-->
+<!--                android:layout_width="330dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:max="100"-->
+<!--                android:layout_marginEnd="10dp"/>-->
+
+            <TextView
+                android:id="@+id/cpu_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/black">
+            </TextView>
+        </LinearLayout>
+    </ScrollView>
+
+
     <!-- Total CPU usage section -->
+
 
 
     <!-- Process info section -->

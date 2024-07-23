@@ -108,6 +108,7 @@ public class ScanAPK extends AppCompatActivity {
             startActivity(intent);
         });
         startScan.setVisibility(View.VISIBLE);
+        scanCompleteTextView.setVisibility(View.GONE);
         scanFailed.setVisibility(View.GONE);
         scanningProcess.setVisibility(View.GONE);
         scanCompleted.setVisibility(View.GONE);
@@ -141,7 +142,7 @@ public class ScanAPK extends AppCompatActivity {
                         }
                         checkAndUploadFile(fileUri);
                         //uploadButton.setOnClickListener(v -> uploadFile(fileUri));
-
+                        //uploadButton.setOnClickListener(v -> checkAndUploadFile(fileUri));
 
                     }
                 });

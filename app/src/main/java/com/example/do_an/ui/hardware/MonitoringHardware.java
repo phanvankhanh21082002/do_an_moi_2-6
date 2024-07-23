@@ -6,12 +6,10 @@ import android.app.ActivityManager;
 
 import android.app.AppOpsManager;
 
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 
-import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.os.Environment;
@@ -39,9 +37,13 @@ import androidx.fragment.app.Fragment;
 import com.example.do_an.R;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MonitoringHardware extends Fragment{
@@ -50,16 +52,12 @@ public class MonitoringHardware extends Fragment{
     private ProgressBar ramProgressBar;
     private TextView storageTextView;
     private TextView ramTextView;
-
     private TextView cpuPercentageTextView;
     private ProgressBar cpuProgressBar;
-
-    private TableLayout cpuUsageView;
-
     private Handler handler;
     private Runnable updateRunnable;
     private static final String TAG = "MonitoringHardware";
-
+    private TextView cpuCoreTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -69,21 +67,22 @@ public class MonitoringHardware extends Fragment{
         ramProgressBar = view.findViewById(R.id.ram_progress);
         storageTextView = view.findViewById(R.id.storage_text);
         ramTextView = view.findViewById(R.id.ram_text);
-        cpuUsageView = view.findViewById(R.id.cpu_info_table);
+
+        cpuCoreTextView = view.findViewById(R.id.cpu_core);
         cpuPercentageTextView = view.findViewById(R.id.cpu_percentage);
-        cpuProgressBar = view.findViewById(R.id.cpu_progress_bar);
+        //cpuProgressBar = view.findViewById(R.id.cpu_progress_bar);
 
         handler = new Handler(Looper.getMainLooper());
 
         if (!hasUsageStatsPermission()) {
             requestRequiredPermissions();
         } else {
-            // Start monitoring CPU usage
             startCpuUsageMonitoring();
         }
 
         updateStorageInfo();
         updateRAMInfo();
+        fetchCpuCoreCount();
 
         return view;
     }
@@ -115,8 +114,8 @@ public class MonitoringHardware extends Fragment{
             updateRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    getUsageStats();
-                    updateCpuProcess();
+                    updateCpuInfo();
+                    //updateCpuProcess();
                     handler.postDelayed(this, 2000); // Update every 2 second
                 }
             };
@@ -164,35 +163,49 @@ public class MonitoringHardware extends Fragment{
         ramTextView.setText(String.format("%.2f GB used / %.2f GB (%d%%)", usedGB, totalGB, ramPercentage));
     }
 
-    private void getUsageStats() {
-        UsageStatsManager usm = (UsageStatsManager) requireContext().getSystemService(Context.USAGE_STATS_SERVICE);
-        long time = System.currentTimeMillis();
-        List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
+    private void fetchCpuCoreCount() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        if (appList != null && !appList.isEmpty()) {
-            int totalCpuUsage = calculateCpuUsage(appList);
-            cpuPercentageTextView.setText(totalCpuUsage + "%");
-            cpuProgressBar.setProgress(totalCpuUsage);
-        } else {
-            cpuPercentageTextView.setText("No data");
-            cpuProgressBar.setProgress(0);
-        }
+        executor.execute(() -> {
+            int coreCount = Runtime.getRuntime().availableProcessors();
+            handler.post(() -> {
+                if (coreCount > 0) {
+                    cpuCoreTextView.setText(coreCount + " cores");
+                } else {
+                    cpuCoreTextView.setText("Error fetching core count");
+                }
+            });
+        });
     }
 
-    private int calculateCpuUsage(List<UsageStats> usageStatsList) {
-        long totalTime = 0;
-        long totalForegroundTime = 0;
+    private void updateCpuInfo() {
+        new Thread(() -> {
+            String cpuInfo = readCpuInfo();
+            if (cpuInfo != null) {
+                requireActivity().runOnUiThread(() -> {
+                    cpuPercentageTextView.setText(cpuInfo);
+                });
+            } else {
+                Log.e("MonitoringHardware", "Failed to read CPU info");
+            }
+        }).start();
+    }
 
-        for (UsageStats usageStats : usageStatsList) {
-            totalTime += usageStats.getTotalTimeInForeground();
-            totalForegroundTime += usageStats.getTotalTimeVisible();
+    private String readCpuInfo() {
+        StringBuilder cpuInfo = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("/proc/cpuinfo"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                cpuInfo.append(line).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            Log.e("MonitoringHardware", "Error reading /proc/cpuinfo", e);
+            return null;
         }
-
-        if (totalTime == 0) {
-            return 0;
-        }
-
-        return (int) ((totalForegroundTime * 100) / totalTime);
+        return cpuInfo.toString();
     }
 
 
@@ -255,7 +268,6 @@ public class MonitoringHardware extends Fragment{
             }
         }
     }
-
 
     private String runTopCommand() {
         StringBuilder output = new StringBuilder();

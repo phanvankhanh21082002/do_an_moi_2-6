@@ -98,7 +98,7 @@
         android:id="@+id/scanCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="376dp"
+        android:layout_marginTop="356dp"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:visibility="visible"
