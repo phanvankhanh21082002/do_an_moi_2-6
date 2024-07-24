@@ -174,6 +174,7 @@ public class ScanAPK extends AppCompatActivity {
         dialog.show();
 
         startScan.setVisibility(View.GONE);
+        scanFailed.setVisibility(View.GONE);
         scanningProcess.setVisibility(View.VISIBLE);
 
         new Thread(() -> {
