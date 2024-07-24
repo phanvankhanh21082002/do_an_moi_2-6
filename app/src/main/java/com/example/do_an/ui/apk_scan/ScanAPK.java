@@ -7,7 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,7 +62,7 @@ public class ScanAPK extends AppCompatActivity {
 
     TextView scanCompleteTextView;
     Button viewDetailsButton;
-    ImageView apkImageView;
+
     DatabaseHelper databaseHelper;
     FilePickerDialog dialog;
     String fileName=null;
@@ -90,7 +90,6 @@ public class ScanAPK extends AppCompatActivity {
         selectedFileTextView = findViewById(R.id.selectedFileTextView);
         scanCompleteTextView = findViewById(R.id.scanCompleteTextView);
         viewDetailsButton = findViewById(R.id.detailsButton);
-        apkImageView = findViewById(R.id.apkImageView);
 
         startScan = findViewById(R.id.log_start_scan);
         scanningProcess = findViewById(R.id.logo_scanning);
@@ -132,16 +131,7 @@ public class ScanAPK extends AppCompatActivity {
                         fileHash = calculateFileHash(fileUri);
                         selectedFileTextView.setVisibility(View.VISIBLE);
                         selectedFileTextView.setText("Selected file: " + fileName);
-
-                        try {
-                            Drawable apkIcon = getPackageManager().getApplicationIcon(fileUri.getPath());
-                            apkImageView.setImageDrawable(apkIcon);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            apkImageView.setImageResource(R.drawable.ic_launcher_background);
-                        }
                         checkAndUploadFile(fileUri);
-                        //uploadButton.setOnClickListener(v -> uploadFile(fileUri));
-                        //uploadButton.setOnClickListener(v -> checkAndUploadFile(fileUri));
 
                     }
                 });
@@ -157,7 +147,6 @@ public class ScanAPK extends AppCompatActivity {
     }
 
     private void checkAndUploadFile(Uri fileUri) {
-        // Check if the file hash exists in the database
         Cursor cursor = databaseHelper.getScanResultByFileHash(fileHash);
         if (cursor.moveToFirst()) {
             @SuppressLint("Range") String existingTime = cursor.getString(cursor.getColumnIndex("time"));
@@ -165,11 +154,12 @@ public class ScanAPK extends AppCompatActivity {
             @SuppressLint("Range") String existingResult = cursor.getString(cursor.getColumnIndex("result"));
             @SuppressLint("Range") String existingLink = cursor.getString(cursor.getColumnIndex("link"));
 
+            scanCompleteTextView.setVisibility(View.GONE);
             databaseHelper.updateScanResultTime(fileHash);
             displayExistingResult(existingFileName, existingResult, existingLink);
 
         } else {
-            // Upload and scan the file if the hash doesn't exist in the database
+
             uploadFile(fileUri);
         }
         cursor.close();
@@ -248,14 +238,14 @@ public class ScanAPK extends AppCompatActivity {
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        reportReady = true; // Set flag to true to break the loop
+                        reportReady = true;
                         handler.post(() -> {
                             dialog.dismiss();
                             showToast("Report is ready!");
                             scanningProcess.setVisibility(View.GONE);
                             scanCompleted.setVisibility(View.VISIBLE);
                             try {
-                                displayReportContent(connection, fileHash); // Pass the file hash to displayReportContent
+                                displayReportContent(connection, fileHash);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -265,10 +255,10 @@ public class ScanAPK extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     handler.post(() -> {
-                        dialog.dismiss(); // Dismiss dialog in case of an error
+                        dialog.dismiss();
                         showToast("Error checking report: " + e.getMessage());
                     });
-                    break; // Exit the loop in case of an error
+                    break;
                 }
             }
         });

@@ -308,7 +308,9 @@ public class MonitoringHardware extends Fragment{
             String result = runTopCommand();
             if (result != null) {
                 Log.d(TAG, "Command output: " + result);
-                requireActivity().runOnUiThread(() -> updateTableLayout(result));
+                if (isAdded() && getActivity() != null) {
+                    requireActivity().runOnUiThread(() -> updateTableLayout(result));
+                }
             } else {
                 Log.e(TAG, "Failed to get CPU process");
             }
