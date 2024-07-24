@@ -54,7 +54,7 @@
     <Button
         android:id="@+id/detailsButton"
         style="@style/CustomButton1"
-        android:layout_width="380dp"
+        android:layout_width="370dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/orange"
@@ -70,7 +70,7 @@
     <Button
         android:id="@+id/logButton"
         style="@style/CustomButton1"
-        android:layout_width="380dp"
+        android:layout_width="370dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/lightBlue"
@@ -146,7 +146,7 @@
     <Button
         android:id="@+id/fileSelectorButton"
         style="@style/CustomButton"
-        android:layout_width="380dp"
+        android:layout_width="370dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/purple"

@@ -188,7 +188,7 @@ public class ScanAPK extends AppCompatActivity {
                         .build();
 
                 Request request = new Request.Builder()
-                        .url("http://34.124.235.94:3000/upload_file")
+                        .url("http://34.87.58.210:3000/upload_file")
                         .post(requestBody)
                         .build();
 
@@ -201,6 +201,7 @@ public class ScanAPK extends AppCompatActivity {
                             scanningProcess.setVisibility(View.GONE);
                             scanFailed.setVisibility(View.VISIBLE);
                             showToast("Scan failed: " + e.getMessage());
+                            Log.e("UploadFileToServer", "Failed to upload file", e);
                         });
                     }
 
@@ -222,6 +223,7 @@ public class ScanAPK extends AppCompatActivity {
                 runOnUiThread(() -> {
                     dialog.dismiss();
                     showToast("Error preparing upload: " + e.getMessage());
+                    Log.e("UploadFileToServer", "Failed to prepare upload", e);
                 });
             }
         }).start();
@@ -233,7 +235,7 @@ public class ScanAPK extends AppCompatActivity {
             boolean reportReady = false;
             while (!reportReady) {
                 try {
-                    URL url = new URL("http://34.124.235.94/reports_txt/" + fileHash + ".txt");
+                    URL url = new URL("http://34.87.58.210/reports_txt/" + fileHash + ".txt");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();
@@ -257,6 +259,7 @@ public class ScanAPK extends AppCompatActivity {
                     handler.post(() -> {
                         dialog.dismiss();
                         showToast("Error checking report: " + e.getMessage());
+                        Log.e("checkForReport", "Failed to check report", e);
                     });
                     break;
                 }
@@ -290,7 +293,7 @@ public class ScanAPK extends AppCompatActivity {
                 status = "Clean";
             }
 
-            String link = "http://34.124.235.94/reports_html/" + fileHash + ".html";
+            String link = "http://34.87.58.210/reports_html/" + fileHash + ".html";
             databaseHelper.insertScanResult(fileName, fileHash, status, link);
 
             scanCompleteTextView.setVisibility(View.VISIBLE);

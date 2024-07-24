@@ -5,16 +5,10 @@ import android.app.ActivityManager;
 
 
 import android.app.AppOpsManager;
-
 import android.content.Context;
 import android.content.Intent;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.os.Environment;
-
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StatFs;
@@ -37,14 +31,10 @@ import androidx.fragment.app.Fragment;
 import com.example.do_an.R;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
