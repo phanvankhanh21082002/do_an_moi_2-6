@@ -138,7 +138,7 @@ public class ScanAPK extends AppCompatActivity {
     }
 
     private void pickFile() {
-        Toast.makeText(this, "Please select an APK file only.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please select an APK file only.", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("application/vnd.android.package-archive");
         intent.addCategory(Intent.CATEGORY_OPENABLE);

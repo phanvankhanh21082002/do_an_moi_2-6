@@ -50,7 +50,12 @@
             android:theme="@style/Theme.Do_an.NoActionBar">
         </activity>
 
-
+        <activity
+            android:name=".ui.hardware.CpuInfo"
+            android:exported="true"
+            android:label="@string/cpuInformation_label"
+            android:theme="@style/Theme.Do_an.NoActionBar">
+        </activity>
 
     </application>
 

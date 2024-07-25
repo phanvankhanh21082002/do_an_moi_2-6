@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.do_an.R;
 
 import java.io.BufferedReader;
@@ -53,6 +55,7 @@ public class MonitoringHardware extends Fragment{
     private TextView cpuCoreTextView;
     private TextView cpuDetailsTextView;
     private int coreCount = 0;
+    private TextView cpuInfoTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MonitoringHardware extends Fragment{
         ramTextView = view.findViewById(R.id.ram_text);
         cpuDetailsTextView = view.findViewById(R.id.cpu_details);
 
+        cpuInfoTextView = view.findViewById(R.id.cpu_info);
         cpuCoreTextView = view.findViewById(R.id.cpu_core);
         cpuPercentageTextView = view.findViewById(R.id.cpu_percentage);
         cpuProgressBar = view.findViewById(R.id.cpu_progress_bar);
@@ -75,6 +79,7 @@ public class MonitoringHardware extends Fragment{
         } else {
             startCpuUsageMonitoring();
         }
+        cpuInfoTextView.setOnClickListener(v -> navigateToCpuInfoActivity());
 
         updateStorageInfo();
         updateRAMInfo();
@@ -92,6 +97,12 @@ public class MonitoringHardware extends Fragment{
     private void requestRequiredPermissions() {
         startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
     }
+
+    private void navigateToCpuInfoActivity() {
+        Intent intent = new Intent(getActivity(), CpuInfo.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onResume() {
@@ -181,7 +192,7 @@ public class MonitoringHardware extends Fragment{
         String[] lines = result.split("\n");
         for (String line : lines) {
             if (line.matches("\\d+%cpu.*")) {
-                return "Explanation: each cpu core has 100% total\nTotal CPU usage:%cpu \nUser processes:%user \nSystem processes:%sys\nIdle CPUs:%idle\n\n" + line;
+                return "Explanation: each cpu core has 100% usage total\nTotal CPU usage:%cpu \nUser processes:%user \nSystem processes:%sys\nIdle CPUs:%idle\n\n" + line;
             }
         }
         return "No CPU details found";
@@ -193,14 +204,18 @@ public class MonitoringHardware extends Fragment{
             if (result != null) {
                 Log.d("MonitoringHardware", "CPU Details: " + result);
                 String cpuDetails = parseCpuDetails(result);
-                requireActivity().runOnUiThread(() -> {
-                    cpuDetailsTextView.setText(cpuDetails);
-                });
+                if (isAdded() && getActivity() != null) { // Check if the fragment is still added
+                    requireActivity().runOnUiThread(() -> {
+                        cpuDetailsTextView.setText(cpuDetails);
+                    });
+                }
             } else {
                 Log.e("MonitoringHardware", "Failed to get CPU details");
-                requireActivity().runOnUiThread(() -> {
-                    cpuDetailsTextView.setText("Failed to get CPU details");
-                });
+                if (isAdded() && getActivity() != null) { // Check if the fragment is still added
+                    requireActivity().runOnUiThread(() -> {
+                        cpuDetailsTextView.setText("Failed to get CPU details");
+                    });
+                }
             }
         }).start();
     }
@@ -240,7 +255,7 @@ public class MonitoringHardware extends Fragment{
                     });
                 }
             } else {
-                if (isAdded()) { // Check if the fragment is added to its activity
+                if (isAdded()) {
                     requireActivity().runOnUiThread(() -> cpuPercentageTextView.setText("No CPU details found"));
                 }
             }
@@ -365,7 +380,6 @@ public class MonitoringHardware extends Fragment{
             boolean headerPassed = false;
             while ((line = reader.readLine()) != null) {
                 Log.d(TAG, "Command output line: " + line);
-                // Filter and format relevant lines
                 if (line.contains("PID") && line.contains("USER") && line.contains("%CPU")) {
                     headerPassed = true;
                     output.append(String.format("%-5s %-5s %-5s %-7s %-10s\n", "PID", "%CPU", "%MEM", "TIME+", "COMM"));

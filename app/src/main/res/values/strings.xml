@@ -6,6 +6,7 @@
     <string name="apk_scan_label">APK Scan</string>
     <string name="about_us_label">About Us</string>
     <string name="database_label">Scan Logs</string>
+    <string name="cpuInformation_label">CPU Information</string>
     <string name="details_file">View details</string>
     <string name="hardware_label">Hardware Monitor</string>
     <string name="cpu_monitoring_label">Hardware status</string>

@@ -20,7 +20,12 @@
         android:id="@+id/nav_database"
         android:name="com.example.do_an.ui.apk_scan.LogActivity"
         android:label="@string/database_label"
-        tools:layout="@layout/activity_log"/>>
+        tools:layout="@layout/activity_log"/>
+    <activity
+        android:id="@+id/nav_cpuInfo"
+        android:name="com.example.do_an.ui.hardware.CpuInfo"
+        android:label="@string/cpuInformation_label"
+        tools:layout="@layout/activity_cpu_info"/>
 
     <fragment
         android:id="@+id/nav_hardware"
