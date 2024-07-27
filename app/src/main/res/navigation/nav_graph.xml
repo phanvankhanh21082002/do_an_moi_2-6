@@ -15,7 +15,7 @@
         android:id="@id/nav_apk_scan"
         android:name="com.example.do_an.ui.apk_scan.ScanAPK"
         android:label="@string/apk_scan_label"
-        tools:layout="@layout/fragment_apk_scan"/>
+        tools:layout="@layout/activity_apk_scan"/>
     <activity
         android:id="@+id/nav_database"
         android:name="com.example.do_an.ui.apk_scan.LogActivity"

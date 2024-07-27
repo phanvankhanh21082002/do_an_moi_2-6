@@ -76,7 +76,7 @@ public class ScanAPK extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_apk_scan);
+        setContentView(R.layout.activity_apk_scan);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -147,6 +147,27 @@ public class ScanAPK extends AppCompatActivity {
     }
 
     private void checkAndUploadFile(Uri fileUri) {
+        try {
+            // Check the file size
+            InputStream inputStream = getContentResolver().openInputStream(fileUri);
+            if (inputStream != null) {
+                int fileSize = inputStream.available();
+                inputStream.close();
+
+                // If file size is more than 30MB, show a message and return
+                if (fileSize > 30 * 1024 * 1024) { // 30MB in bytes
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "File too large. Please select a file smaller than 30MB.", Toast.LENGTH_LONG).show();
+                    });
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            runOnUiThread(() -> {
+                showToast("Error checking file size: " + e.getMessage());
+            });
+            return;
+        }
         Cursor cursor = databaseHelper.getScanResultByFileHash(fileHash);
         if (cursor.moveToFirst()) {
             @SuppressLint("Range") String existingTime = cursor.getString(cursor.getColumnIndex("time"));

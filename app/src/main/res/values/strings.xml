@@ -19,7 +19,7 @@
     <string name="apk_image">apk image</string>
     <string name="view_details">View Details</string>
     <string name="view_log">View Logs</string>
-    <string name="fileSelectorButton">Select File</string>
+    <string name="fileSelectorButton">Select File and Scan</string>
     <string name="uploadButton">Scan File</string>
     <string name="downloadButton">Click to View Results</string>
     <string name="clearButton">Click to Clear Database</string>
