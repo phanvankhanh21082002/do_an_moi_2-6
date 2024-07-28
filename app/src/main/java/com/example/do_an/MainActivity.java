@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us, R.id.nav_hardware)
+        mappbarconfiguration = new AppBarConfiguration.Builder(R.id.nav_home,R.id.nav_apk_scan, R.id.nav_about_us)
                 .setOpenableLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mappbarconfiguration);
