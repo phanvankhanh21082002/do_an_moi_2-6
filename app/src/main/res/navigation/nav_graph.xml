@@ -17,11 +17,21 @@
         android:label="@string/apk_scan_label"
         tools:layout="@layout/activity_apk_scan"/>
     <activity
+        android:id="@+id/nav_cpuInfo"
+        android:name="com.example.do_an.ui.hardware.CpuInfo"
+        android:label="@string/cpuInformation_label"
+        tools:layout="@layout/activity_cpu_info"/>
+
+    <fragment
+        android:id="@+id/nav_hardware"
+        android:name="com.example.do_an.ui.hardware.MonitoringHardware"
+        android:label="@string/hardware_label"
+        tools:layout="@layout/fragment_hardware_monitoring"/>
+    <activity
         android:id="@+id/nav_database"
         android:name="com.example.do_an.ui.apk_scan.LogActivity"
         android:label="@string/database_label"
         tools:layout="@layout/activity_log"/>
-
 
     <fragment
         android:id="@+id/nav_about_us"

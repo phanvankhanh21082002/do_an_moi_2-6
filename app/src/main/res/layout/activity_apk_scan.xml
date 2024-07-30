@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
+    android:background="@color/lightLightGray"
     tools:context=".ui.apk_scan.ScanAPK">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -28,6 +29,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
+        style="@style/CustomBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="290dp"

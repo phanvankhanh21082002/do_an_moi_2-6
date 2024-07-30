@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +12,7 @@ import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "fileScan.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String TABLE_NAME = "scan_results";
     private static final String COLUMN_FILE_NAME = "file_name";
@@ -29,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FILE_NAME + " TEXT, " +
                 COLUMN_TIME + " TEXT, " +
                 COLUMN_RESULT + " TEXT, " +
@@ -62,6 +62,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_TIME, getCurrentTime());
         db.update(TABLE_NAME, contentValues, COLUMN_FILE_HASH + " = ?", new String[]{fileHash});
     }
+
+    public void removeDuplicateLogs() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String subQuery = "SELECT MAX(_id) as id FROM " + TABLE_NAME + " GROUP BY " + COLUMN_FILE_HASH;
+        String deleteQuery = "DELETE FROM " + TABLE_NAME + " WHERE _id NOT IN (" + subQuery + ")";
+        db.execSQL(deleteQuery);
+    }
+
 
     public Cursor getScanResultByFileHash(String fileHash) {
         SQLiteDatabase db = this.getReadableDatabase();

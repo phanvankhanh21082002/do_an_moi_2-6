@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,10 +26,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.do_an.R;
-import com.github.angads25.filepicker.view.FilePickerDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,13 +43,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class ScanAPK extends AppCompatActivity {
     private ActivityResultLauncher<Intent> filePickerLauncher;
@@ -58,20 +54,16 @@ public class ScanAPK extends AppCompatActivity {
     private final OkHttpClient client = new OkHttpClient();
     Button fileSelectorButton;
     TextView selectedFileTextView;
-    Button uploadButton;
-
     TextView scanCompleteTextView;
     Button viewDetailsButton;
-
     DatabaseHelper databaseHelper;
-    FilePickerDialog dialog;
-    String fileName=null;
+    String fileName = null;
     String fileHash = null;
-
     private ImageView startScan;
     private ImageView scanningProcess;
     private ImageView scanCompleted;
     private ImageView scanFailed;
+    private String status;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,8 +102,18 @@ public class ScanAPK extends AppCompatActivity {
         scanFailed.setVisibility(View.GONE);
         scanningProcess.setVisibility(View.GONE);
         scanCompleted.setVisibility(View.GONE);
+
+        if (getIntent().getBooleanExtra("fromNotification", false)) {
+            fileName = getIntent().getStringExtra("fileName");
+            status = getIntent().getStringExtra("status");
+
+            if (fileName != null && status != null) {
+                displayScanResult(fileName, status);
+            }
+        }
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
@@ -119,7 +121,6 @@ public class ScanAPK extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void setupFilePickerLauncher() {
         filePickerLauncher = registerForActivityResult(
@@ -129,10 +130,10 @@ public class ScanAPK extends AppCompatActivity {
                         Uri fileUri = result.getData().getData();
                         fileName = getFileName(fileUri);
                         fileHash = calculateFileHash(fileUri);
+                        scanCompleted.setVisibility(View.GONE);
                         selectedFileTextView.setVisibility(View.VISIBLE);
                         selectedFileTextView.setText("Selected file: " + fileName);
                         checkAndUploadFile(fileUri);
-
                     }
                 });
     }
@@ -147,30 +148,28 @@ public class ScanAPK extends AppCompatActivity {
     }
 
     private void checkAndUploadFile(Uri fileUri) {
-        try {
-            // Check the file size
-            InputStream inputStream = getContentResolver().openInputStream(fileUri);
-            if (inputStream != null) {
-                int fileSize = inputStream.available();
-                inputStream.close();
-
-                // If file size is more than 30MB, show a message and return
-                if (fileSize > 30 * 1024 * 1024) { // 30MB in bytes
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "File too large. Please select a file smaller than 30MB.", Toast.LENGTH_LONG).show();
-                    });
-                    return;
-                }
-            }
-        } catch (IOException e) {
-            runOnUiThread(() -> {
-                showToast("Error checking file size: " + e.getMessage());
-            });
-            return;
-        }
+//        try {
+//            InputStream inputStream = getContentResolver().openInputStream(fileUri);
+//            if (inputStream != null) {
+//                int fileSize = inputStream.available();
+//                inputStream.close();
+//                if (fileSize > 30 * 1024 * 1024) {
+//                    runOnUiThread(() -> {
+//                        selectedFileTextView.setVisibility(View.GONE);
+//                        showToast("File too large. Please select a file smaller than 30MB.");
+//                    });
+//                    return;
+//                }
+//            }
+//        } catch (IOException e) {
+//            runOnUiThread(() -> {
+//                showToast("Error checking file size: " + e.getMessage());
+//            });
+//            return;
+//        }
+        scanCompleted.setVisibility(View.GONE);
         Cursor cursor = databaseHelper.getScanResultByFileHash(fileHash);
         if (cursor.moveToFirst()) {
-            @SuppressLint("Range") String existingTime = cursor.getString(cursor.getColumnIndex("time"));
             @SuppressLint("Range") String existingFileName = cursor.getString(cursor.getColumnIndex("file_name"));
             @SuppressLint("Range") String existingResult = cursor.getString(cursor.getColumnIndex("result"));
             @SuppressLint("Range") String existingLink = cursor.getString(cursor.getColumnIndex("link"));
@@ -178,24 +177,22 @@ public class ScanAPK extends AppCompatActivity {
             scanCompleteTextView.setVisibility(View.GONE);
             databaseHelper.updateScanResultTime(fileHash);
             displayExistingResult(existingFileName, existingResult, existingLink);
-
         } else {
-
             uploadFile(fileUri);
         }
         cursor.close();
     }
 
     private void uploadFile(Uri fileUri) {
-        // Create and show a ProgressDialog
         ProgressDialog dialog = new ProgressDialog(ScanAPK.this);
-        dialog.setMessage("Scanning file...");
+        dialog.setMessage("Uploading file...");
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.show();
 
         startScan.setVisibility(View.GONE);
         scanFailed.setVisibility(View.GONE);
+        scanCompleteTextView.setVisibility(View.GONE);
         scanningProcess.setVisibility(View.VISIBLE);
 
         new Thread(() -> {
@@ -209,34 +206,35 @@ public class ScanAPK extends AppCompatActivity {
                         .addFormDataPart("file_hash", fileHash)
                         .build();
 
-                Request request = new Request.Builder()
-                        .url("http://34.87.58.210:3000/upload_file")
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url("http://35.247.145.117:3000/upload_file")
                         .post(requestBody)
                         .build();
 
-                OkHttpClient client = new OkHttpClient();
-                client.newCall(request).enqueue(new Callback() {
+                client.newCall(request).enqueue(new okhttp3.Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(okhttp3.Call call, IOException e) {
                         runOnUiThread(() -> {
                             dialog.dismiss();
                             scanningProcess.setVisibility(View.GONE);
+                            scanCompleteTextView.setVisibility(View.GONE);
                             scanFailed.setVisibility(View.VISIBLE);
-                            showToast("Scan failed: " + e.getMessage());
+                            showToast("Upload failed: " + e.getMessage());
                             Log.e("UploadFileToServer", "Failed to upload file", e);
                         });
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                         if (response.isSuccessful()) {
                             runOnUiThread(() -> {
-                                runOnUiThread(() -> checkForReport(fileHash, dialog));
+                                dialog.setMessage("Scanning file...");
+                                checkForReport(fileHash, dialog);
                             });
                         } else {
                             runOnUiThread(() -> {
                                 dialog.dismiss();
-                                showToast("Scan failed with code: " + response.code());
+                                showToast("Upload failed with code: " + response.code());
                             });
                         }
                     }
@@ -251,13 +249,12 @@ public class ScanAPK extends AppCompatActivity {
         }).start();
     }
 
-
     private void checkForReport(String fileHash, ProgressDialog dialog) {
         executor.execute(() -> {
             boolean reportReady = false;
             while (!reportReady) {
                 try {
-                    URL url = new URL("http://34.87.58.210/reports_txt/" + fileHash + ".txt");
+                    URL url = new URL("http://35.247.145.117/reports_txt/" + fileHash + ".txt");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     int responseCode = connection.getResponseCode();
@@ -287,50 +284,87 @@ public class ScanAPK extends AppCompatActivity {
                 }
             }
         });
+
+        // Trigger WorkManager to handle the background task when the app is closed
+        Data data = new Data.Builder()
+                .putString("fileName", fileName)
+                .putString("fileHash", fileHash)
+                .build();
+
+        OneTimeWorkRequest scanWorkRequest = new OneTimeWorkRequest.Builder(ScanWorker.class)
+                .setInputData(data)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(scanWorkRequest);
     }
 
     private void displayReportContent(HttpURLConnection connection, String fileHash) throws IOException {
         InputStream inputStream = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder reportContent = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line).append("<br>");
+            reportContent.append(line).append("\n");
         }
         reader.close();
-        String reportContent = stringBuilder.toString();
-        System.out.println(reportContent);
+
+        String status;
+        if (reportContent.toString().contains("Result: Warning")) {
+            status = "Warning";
+        } else if (reportContent.toString().contains("Result: Malware")) {
+            status = "Malware";
+        } else {
+            status = "Clean";
+        }
 
         handler.post(() -> {
-            String resultText = reportContent;
-            String status = "";
-            if (resultText.contains("Result: Warning")) {
-                scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
-                status = "Warning";
-            } else if (resultText.contains("Result: Malware")) {
-                scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-                status = "Malware";
-            } else if (resultText.contains("Result: Clean")) {
-                scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
-                status = "Clean";
+            // Check if the result already exists in the database
+            Cursor cursor = databaseHelper.getScanResultByFileHash(fileHash);
+            if (cursor.moveToFirst()) {
+                // Update the existing result
+                databaseHelper.updateScanResultTime(fileHash);
+            } else {
+                // Insert new result
+                String link = "http://35.247.145.117/reports_html/" + fileHash + ".html";
+                databaseHelper.insertScanResult(fileName, fileHash, status, link);
             }
+            cursor.close();
+            databaseHelper.removeDuplicateLogs();  // Remove duplicate logs
+            displayScanResult(fileName, status);
+        });
+    }
 
-            String link = "http://34.87.58.210/reports_html/" + fileHash + ".html";
-            databaseHelper.insertScanResult(fileName, fileHash, status, link);
+    private void displayScanResult(String fileName, String status) {
+        selectedFileTextView.setVisibility(View.VISIBLE);
+        selectedFileTextView.setText("Selected file: " + fileName);
 
-            scanCompleteTextView.setVisibility(View.VISIBLE);
-            scanCompleteTextView.setText(status);
-            scanCompleteTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
-            viewDetailsButton.setVisibility(View.VISIBLE);
-            viewDetailsButton.setOnClickListener(v -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                startActivity(browserIntent);
-            });
+        scanCompleteTextView.setVisibility(View.VISIBLE);
+        scanCompleteTextView.setText(status);
+
+        if (status.equals("Warning")) {
+            scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+        } else if (status.equals("Malware")) {
+            scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        } else if (status.equals("Clean")) {
+            scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        }
+
+        viewDetailsButton.setVisibility(View.VISIBLE);
+        viewDetailsButton.setOnClickListener(v -> {
+            String link = "http://35.247.145.117/reports_html/" + fileHash + ".html";
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            startActivity(browserIntent);
         });
     }
 
     private void displayExistingResult(String fileName, String status, String link) {
         handler.post(() -> {
+            selectedFileTextView.setVisibility(View.VISIBLE);
+            selectedFileTextView.setText("Selected file: " + fileName);
+
+            scanCompleteTextView.setVisibility(View.VISIBLE);
+            scanCompleteTextView.setText(status);
+
             if (status.equals("Warning")) {
                 scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
             } else if (status.equals("Malware")) {
@@ -339,9 +373,6 @@ public class ScanAPK extends AppCompatActivity {
                 scanCompleteTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             }
 
-            scanCompleteTextView.setVisibility(View.VISIBLE);
-            scanCompleteTextView.setText(status);
-            scanCompleteTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
             viewDetailsButton.setVisibility(View.VISIBLE);
             viewDetailsButton.setOnClickListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
@@ -349,7 +380,6 @@ public class ScanAPK extends AppCompatActivity {
             });
         });
     }
-
 
     private void showToast(String message) {
         Toast.makeText(ScanAPK.this, message, Toast.LENGTH_SHORT).show();
@@ -395,5 +425,7 @@ public class ScanAPK extends AppCompatActivity {
             throw new RuntimeException("Failed to calculate file hash", e);
         }
     }
-
 }
+
+
+
