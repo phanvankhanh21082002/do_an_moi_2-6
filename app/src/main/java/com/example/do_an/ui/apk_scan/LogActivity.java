@@ -90,15 +90,6 @@ public class LogActivity extends AppCompatActivity {
         cursor.close();
         return entries;
     }
-
-    private void confirmAndDeleteAllResults() {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirm Delete")
-                .setMessage("Are you sure you want to delete all results?")
-                .setPositiveButton("Yes", (dialog, which) -> clearLogs())
-                .setNegativeButton("No", null)
-                .show();
-    }
     private void clearLogs() {
         databaseHelper.deleteAllScanResults();
         scanLogEntries.clear();
