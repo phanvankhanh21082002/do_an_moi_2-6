@@ -44,9 +44,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+
 
 public class ScanAPK extends AppCompatActivity {
     private ActivityResultLauncher<Intent> filePickerLauncher;
@@ -149,25 +148,25 @@ public class ScanAPK extends AppCompatActivity {
     }
 
     private void checkAndUploadFile(Uri fileUri) {
-//        try {
-//            InputStream inputStream = getContentResolver().openInputStream(fileUri);
-//            if (inputStream != null) {
-//                int fileSize = inputStream.available();
-//                inputStream.close();
-//                if (fileSize > 30 * 1024 * 1024) {
-//                    runOnUiThread(() -> {
-//                        selectedFileTextView.setVisibility(View.GONE);
-//                        showToast("File too large. Please select a file smaller than 30MB.");
-//                    });
-//                    return;
-//                }
-//            }
-//        } catch (IOException e) {
-//            runOnUiThread(() -> {
-//                showToast("Error checking file size: " + e.getMessage());
-//            });
-//            return;
-//        }
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(fileUri);
+            if (inputStream != null) {
+                int fileSize = inputStream.available();
+                inputStream.close();
+                if (fileSize > 200 * 1024 * 1024) {
+                    runOnUiThread(() -> {
+                        selectedFileTextView.setVisibility(View.GONE);
+                        showToast("File too large. Please select a file smaller than 30MB.");
+                    });
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            runOnUiThread(() -> {
+                showToast("Error checking file size: " + e.getMessage());
+            });
+            return;
+        }
         scanCompleted.setVisibility(View.GONE);
         Cursor cursor = databaseHelper.getScanResultByFileHash(fileHash);
         if (cursor.moveToFirst()) {
