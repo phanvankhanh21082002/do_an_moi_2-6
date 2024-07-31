@@ -41,7 +41,7 @@ public class ScanLogAdapter extends RecyclerView.Adapter<ScanLogAdapter.ViewHold
         holder.tvTime.setText(entry.getTime());
         holder.tvFileName.setText(entry.getFileName());
         holder.tvStatus.setText(entry.getStatus());
-        holder.tvLink.setText("Chi tiết file");
+        holder.tvLink.setText("View detail file");
 
         // Set the background color based on status
         switch (entry.getStatus()) {

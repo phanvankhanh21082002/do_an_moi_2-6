@@ -117,11 +117,11 @@ public class ScanWorker extends Worker {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.logo_icon);
+        Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.logo_icon);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo_notification)
-                .setLargeIcon(largeIcon)
+                .setLargeIcon(bitmap)
                 .setContentTitle("Scan Result for: " + fileName)
                 .setContentText("Status: " + status)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

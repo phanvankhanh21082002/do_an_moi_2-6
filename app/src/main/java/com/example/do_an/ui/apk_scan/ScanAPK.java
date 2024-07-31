@@ -28,6 +28,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkContinuation;
 import androidx.work.WorkManager;
 
 import com.example.do_an.R;
@@ -188,10 +189,11 @@ public class ScanAPK extends AppCompatActivity {
         dialog.setMessage("Uploading file...");
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
-        dialog.show();
+        dialog.dismiss();
 
         startScan.setVisibility(View.GONE);
         scanFailed.setVisibility(View.GONE);
+        scanCompleted.setVisibility(View.GONE);
         scanCompleteTextView.setVisibility(View.GONE);
         scanningProcess.setVisibility(View.VISIBLE);
 
@@ -199,46 +201,45 @@ public class ScanAPK extends AppCompatActivity {
             try {
                 fileName = getFileName(fileUri);
                 fileHash = calculateFileHash(fileUri);
-                RequestBody fileBody = UploadFileToServer.createRequestBodyFromUri(this, fileUri);
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("uploaded_file", fileName, fileBody)
-                        .addFormDataPart("file_hash", fileHash)
+                String filePath = UploadFileToServer.saveUriToFile(this, fileUri); // Save the file locally
+
+                // Prepare data for WorkManager
+                Data inputData = new Data.Builder()
+                        .putString("filePath", filePath)
+                        .putString("fileHash", fileHash)
+                        .putString("fileName", fileName)
                         .build();
 
-                okhttp3.Request request = new okhttp3.Request.Builder()
-                        .url("http://35.247.145.117:3000/upload_file")
-                        .post(requestBody)
+                // Create WorkRequests
+                OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
+                        .setInputData(inputData)
                         .build();
 
-                client.newCall(request).enqueue(new okhttp3.Callback() {
-                    @Override
-                    public void onFailure(okhttp3.Call call, IOException e) {
-                        runOnUiThread(() -> {
-                            dialog.dismiss();
-                            scanningProcess.setVisibility(View.GONE);
-                            scanCompleteTextView.setVisibility(View.GONE);
-                            scanFailed.setVisibility(View.VISIBLE);
-                            showToast("Upload failed: " + e.getMessage());
-                            Log.e("UploadFileToServer", "Failed to upload file", e);
-                        });
-                    }
+                OneTimeWorkRequest scanWorkRequest = new OneTimeWorkRequest.Builder(ScanWorker.class)
+                        .setInputData(inputData)
+                        .build();
 
-                    @Override
-                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                        if (response.isSuccessful()) {
-                            runOnUiThread(() -> {
-                                dialog.setMessage("Scanning file...");
-                                checkForReport(fileHash, dialog);
+                // Chain WorkRequests
+                WorkContinuation continuation = WorkManager.getInstance(this)
+                        .beginWith(uploadWorkRequest)
+                        .then(scanWorkRequest);
+
+                continuation.enqueue();
+
+                handler.post(() -> {
+                    WorkManager.getInstance(this).getWorkInfoByIdLiveData(scanWorkRequest.getId())
+                            .observe(this, workInfo -> {
+                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                    checkForReport(fileHash, dialog);
+                                }
                             });
-                        } else {
-                            runOnUiThread(() -> {
-                                dialog.dismiss();
-                                showToast("Upload failed with code: " + response.code());
-                            });
-                        }
-                    }
                 });
+
+                handler.post(() -> {
+                    dialog.dismiss();
+                    Toast.makeText(ScanAPK.this, "Upload initiated. You will be notified upon completion.", Toast.LENGTH_SHORT).show();
+                });
+
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     dialog.dismiss();
