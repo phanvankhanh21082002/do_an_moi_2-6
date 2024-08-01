@@ -38,12 +38,12 @@
     <string name="database_export">Export Database</string>
     <string name="clear_log">Clear Logs</string>"
 
-    <string name="home_appName">Android-malware Agency</string>
+    <string name="home_appName">APK Malware Agency</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="nav_header_title">Android-malware Agency</string>
+    <string name="nav_header_title">APK Malware Agency</string>
     <string name="nav_header_subtitle">GSU24IA03</string>
     <string name="nav_header_desc">Navigation header</string>
 
@@ -56,5 +56,17 @@
     <string name="menu_db_show">Logs</string>"
     <string name="menu_about_us">About Us</string>
     <string name="menu_permission_list">Permission List</string>
+
+
+    <!--    About us-->
+    <string name="title1">This app was developed by five students of the last year of FPT University.\n\nThe institution’s staunch commitment to creating a nurturing learning environment and stimulating intellectual curiosity.</string>
+    <string name="title2">This application was built to detect malicious APK files and should be useful for searching for possible malware on Android devices.</string>
+    <string name="CLAMAV">Static analysis by ClamAV, an open-source antivirus engine, uses custom Yara rules signatures to detect corresponding patterns in APK files, such as string, textual, or binary patterns.</string>
+    <string name="JADX">APK analysis with the Jadx open-source decompiler. To supplement the static analysis solution, we suggest deeper static analysis with Jadx, a powerful and versatile toolkit for decompiling Android applications.</string>
+    <string name="ML">Use machine learning to enhance detection capabilities. Demonstrate the ability of machine learning to improve detection. Show understanding of algorithms used. \n\nConvolutional Neural Networks (CNNs) for Malware Detection.
+\n\nConvolutional Neural Networks (CNNs) are leveraged to enhance the detection capabilities of the static analysis engine by analyzing patterns and features within APK files that may be indicative of malware.
+
+\n\nModel Training: CNN models are trained on large datasets of known benign and malicious APK files. The training process involves feeding the models with extracted features and allowing them to learn patterns associated with malware.</string>
+
 
 </resources>
