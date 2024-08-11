@@ -188,7 +188,7 @@ public class ScanAPK extends AppCompatActivity {
         dialog.setMessage("Uploading file...");
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
-        dialog.dismiss();
+        dialog.show();
 
         startScan.setVisibility(View.GONE);
         scanFailed.setVisibility(View.GONE);
