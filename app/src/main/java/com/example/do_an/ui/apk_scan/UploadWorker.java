@@ -60,6 +60,12 @@ public class UploadWorker extends Worker {
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 Log.d(TAG, "File upload successful");
+                boolean deleted = file.delete();
+                if (deleted) {
+                    Log.d(TAG, "File deleted successfully: " + filePath);
+                } else {
+                    Log.e(TAG, "Failed to delete file: " + filePath);
+                }
                 return Result.success();
             } else {
                 Log.e(TAG, "File upload failed with response code: " + response.code());
